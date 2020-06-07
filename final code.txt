@@ -1,0 +1,110 @@
+import requests
+import RPi.GPIO as GPIO
+import time
+import sys
+import urllib2
+from sensor8 import distance
+from sensor2 import Distance
+from sensor3 import dist
+r = requests.post('https://maker.ifttt.com/trigger/detect/with/key/Q901r6eexrkr4wrAdiVee', params={"value1":"none","value2":"none","value3":"none"})
+htmlfile = urllib2.urlopen("https://vanshproject.000webhostapp.com/buttonStatus.php")
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(8,GPIO.OUT)
+GPIO.setup(11,GPIO.OUT)
+GPIO.setup(13,GPIO.OUT)
+GPIO.setup(15,GPIO.OUT)
+GPIO.setup(5,GPIO.OUT)
+GPIO.output(5,False)
+GPIO.output(8, False)
+GPIO.output(11,False)
+GPIO.output(13,False)
+GPIO.output(15,False)
+def pivot_left(tf):
+    GPIO.output(8,False)
+    GPIO.output(11, True)
+    GPIO.output(13, True)
+    GPIO.output(15, False)
+    time.sleep(tf)
+
+def turn_left(tf):
+    GPIO.output(8,True)
+    GPIO.output(11, False)
+    GPIO.output(13, False)
+    GPIO.output(15, True)
+    time.sleep(tf)
+
+def pivot_right(tf):
+    GPIO.output(8,True)
+    GPIO.output(11, True)
+    GPIO.output(13, True)
+    GPIO.output(15, False)
+    time.sleep(tf)
+
+def turn_right(tf):
+    GPIO.output(8,False)
+    GPIO.output(11, True)
+    GPIO.output(13, False)
+    GPIO.output(15,False)
+    time.sleep(tf)
+
+def reverse():
+    GPIO.output(8,True)
+    GPIO.output(11, False)
+    GPIO.output(13,True)
+    GPIO.output(15,False)
+    ##time.sleep(tf)
+
+def forward():
+    GPIO.output(8,False)
+    GPIO.output(11, True)
+    GPIO.output(13,False)
+    GPIO.output(15,True)
+    #time.sleep(tf)
+def stop():
+    GPIO.output(8,False)
+    GPIO.output(11,False)
+    GPIO.output(13, False)
+    GPIO.output(15,False)
+def check():
+    loop = True
+    while(loop):
+    if(htmltext == b'S1ON'):
+    GPIO.output(5,True)
+    init =True
+    while(init):
+	if distance() > 50:
+		forward()
+	if distance() < 50:
+		if  Distance() < 50 :
+            		turn_right(2)
+        	elif dist() < 50:
+            		turn_left(2)
+        	elif Distance() > dist():
+            		turn_right(2)
+        	elif dist() > Distance():
+	            	turn_left(2)
+		htmltext = htmlfile.read()
+		if htmltext == b'S1OFF):
+		    GPIO.output(5,False)
+		    stop()
+		    init = False
+        elif(htmltext == b'S1OFF'):
+	    GPIO.output(5,False)
+	    stop()
+			
+	
+def auto():
+    repeat = True
+    while (repeat):
+        htmltext = htmlfile.read()
+        print(htmltext)
+	if (htmltext == b'S1ON'):
+   		 GPIO.output(5, True)
+                 time.sleep(5)
+		 repeat = False
+   		 check()
+	elif(htmltext == b'S1OFF'): 
+    		 GPIO.output(5,False)
+    		 stop()
+auto()
